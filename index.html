@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LinkChat</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#0b0d12;color:#e8eaf0;height:100dvh;display:flex;flex-direction:column}
+.card{max-width:440px;margin:auto;padding:28px;background:#151923;border-radius:20px;width:92%;box-shadow:0 10px 40px #0008}
+h1{margin:0 0 4px;font-size:28px;background:linear-gradient(90deg,#7c5cff,#22d3ee);-webkit-background-clip:text;color:transparent}
+p.sub{color:#8a90a2;margin:0 0 20px}label{font-size:13px;color:#8a90a2;display:block;margin:12px 0 6px}
+input,select,button{width:100%;padding:13px;border-radius:12px;border:1px solid #2a3040;background:#0f1219;color:#e8eaf0;font-size:16px}
+button{background:linear-gradient(90deg,#7c5cff,#5b8cff);border:0;font-weight:600;margin-top:18px;cursor:pointer}button:active{transform:scale(.98)}
+.modes{display:flex;gap:8px}.modes div{flex:1;padding:12px;border:1px solid #2a3040;border-radius:12px;cursor:pointer;font-size:14px}.modes .on{border-color:#7c5cff;background:#7c5cff22}
+header{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#151923;border-bottom:1px solid #222838}
+header b{flex:1}header button,header select{width:auto;margin:0;padding:8px 12px;font-size:14px}
+#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:80%;padding:10px 14px;border-radius:18px;background:#1d2230;animation:pop .25s ease-out;align-self:flex-start}
+.m.me{align-self:flex-end;background:linear-gradient(135deg,#7c5cff,#5b8cff)}
+.m .n{font-size:12px;opacity:.7}.m .o{font-size:12px;opacity:.65;margin-top:4px;font-style:italic}
+.sys{align-self:center;font-size:12px;color:#8a90a2;animation:pop .25s}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+form{display:flex;gap:8px;padding:10px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:#151923}form button{width:auto;margin:0}
+.badge{font-size:11px;padding:3px 8px;border-radius:10px;background:#22d3ee22;color:#22d3ee}.hide{display:none!important}
+</style></head><body>
+<div id="setup" class="card"><h1>LinkChat</h1><p class="sub">Chat across languages, live.</p>
+<label>Your name</label><input id="name" placeholder="e.g. Anthony">
+<label>Your language</label><select id="lang"></select>
+<div id="modeBox"><label>Room type</label><div class="modes"><div data-m="saved" class="on">💾 Saved<br><small>History kept</small></div><div data-m="disappearing">⏳ Disappearing<br><small>Expires in 2h</small></div></div></div>
+<button id="go">Create room</button></div>
+<div id="chat" class="hide" style="display:flex;flex-direction:column;height:100dvh">
+<header><b>LinkChat <span id="badge" class="badge"></span></b><select id="lang2"></select><button id="share">🔗 Share</button></header>
+<div id="msgs"></div><form id="f"><input id="t" placeholder="Type a message…" autocomplete="off"><button>Send</button></form></div>
+<script>
+const L={en:'English',es:'Español',fr:'Français',de:'Deutsch',it:'Italiano',pt:'Português',ru:'Русский',zh:'中文',ja:'日本語',ko:'한국어',ar:'العربية',hi:'हिन्दी',tr:'Türkçe',vi:'Tiếng Việt',tl:'Filipino',pl:'Polski',nl:'Nederlands',uk:'Українська',fa:'فارسی',sw:'Kiswahili'};
+const $=id=>document.getElementById(id);for(const s of[$('lang'),$('lang2')])for(const k in L)s.add(new Option(L[k],k));
+$('lang').value=localStorage.lang||(navigator.language||'en').slice(0,2);if(!$('lang').value)$('lang').value='en';$('name').value=localStorage.name||'';
+let mode='saved',room=new URLSearchParams(location.search).get('room'),ws,me;
+document.querySelectorAll('.modes div').forEach(d=>d.onclick=()=>{document.querySelectorAll('.modes div').forEach(x=>x.classList.remove('on'));d.classList.add('on');mode=d.dataset.m});
+if(room){$('modeBox').classList.add('hide');$('go').textContent='Join chat'}
+$('go').onclick=async()=>{me=$('name').value.trim()||'Guest';localStorage.name=me;localStorage.lang=$('lang').value;
+if(!room){const r=await(await fetch('/api/rooms',{method:'POST',body:JSON.stringify({mode})})).json();room=r.id;history.replaceState(0,'','?room='+room)}connect()};
+function connect(){$('setup').classList.add('hide');$('chat').classList.remove('hide');$('lang2').value=$('lang').value;
+ws=new WebSocket((location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws?room='+room+'&name='+encodeURIComponent(me)+'&lang='+$('lang').value);
+ws.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==='room')$('badge').textContent=d.room.mode==='saved'?'Saved':'Disappearing · until '+new Date(d.room.expires).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+if(d.type==='error')sys(d.error);if(d.type==='sys')sys(d.text);if(d.type==='msg')add(d.msg)};ws.onclose=()=>sys('Disconnected — refresh to reconnect')}
+function sys(t){const e=document.createElement('div');e.className='sys';e.textContent=t;$('msgs').append(e);e.scrollIntoView()}
+function add(m){const e=document.createElement('div');e.className='m'+(m.name===me?' me':'');const same=m.translated===m.text;
+e.innerHTML='<div class="n"></div><div class="x"></div>'+(same?'':'<div class="o"></div>');e.querySelector('.n').textContent=m.name+' · '+(L[m.lang]||m.lang);
+e.querySelector('.x').textContent=m.translated;if(!same)e.querySelector('.o').textContent='Original: '+m.text;$('msgs').append(e);e.scrollIntoView({behavior:'smooth'})}
+$('f').onsubmit=e=>{e.preventDefault();const t=$('t').value.trim();if(t&&ws.readyState==1){ws.send(JSON.stringify({type:'msg',text:t}));$('t').value=''}};
+$('lang2').onchange=()=>{localStorage.lang=$('lang2').value;ws.send(JSON.stringify({type:'lang',lang:$('lang2').value}))};
+$('share').onclick=async()=>{const u=location.origin+'/?room='+room;if(navigator.share)try{await navigator.share({title:'Join my LinkChat',url:u});return}catch{}await navigator.clipboard.writeText(u);$('share').textContent='✓ Copied';setTimeout(()=>$('share').textContent='🔗 Share',1500)};
+</script></body></html>

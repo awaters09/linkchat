@@ -1,0 +1,4 @@
+node_modules/
+*.log
+cloudflared
+rooms.json

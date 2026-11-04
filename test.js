@@ -1,0 +1,4 @@
+const WebSocket=require('ws');const B='http://localhost:8787';
+(async()=>{const r=await(await fetch(B+'/api/rooms',{method:'POST',headers:{'bypass-tunnel-reminder':'1'},body:'{"mode":"disappearing"}'})).json();console.log('room',r);
+const mk=(n,l)=>new Promise(res=>{const w=new WebSocket(B.replace('http','ws')+'/ws?room='+r.id+'&name='+n+'&lang='+l,{headers:{'bypass-tunnel-reminder':'1'}});w.on('message',d=>{const j=JSON.parse(d);if(j.type==='msg')console.log(n,'got:',j.msg.text,'=>',j.msg.translated)});w.on('open',()=>res(w))});
+const a=await mk('Anthony','en'),b=await mk('Maria','es');a.send(JSON.stringify({type:'msg',text:'Hello, how are you today?'}));await new Promise(s=>setTimeout(s,2500));b.send(JSON.stringify({type:'msg',text:'Muy bien, gracias. ¿Y tú?'}));await new Promise(s=>setTimeout(s,3000));process.exit()})();
