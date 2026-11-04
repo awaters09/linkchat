@@ -104,6 +104,18 @@ header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-in
 .empty .bubble{width:72px;height:72px;margin:0 auto 14px;border-radius:24px;background:color-mix(in srgb,var(--a1) 12%,transparent);display:grid;place-items:center;color:var(--a1)}
 .empty b{display:block;color:var(--text);font-size:17px;margin-bottom:4px}
 .empty button{margin-top:14px;padding:10px 18px;border-radius:99px;background:var(--grad);color:#fff;font-weight:600;font-size:14px}
+
+.pa{border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:700;background-size:cover;background-position:center;letter-spacing:-.02em;box-shadow:0 0 0 2px var(--bg)}
+.avpick{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.avbtn{position:relative;width:72px;height:72px;border-radius:50%;flex:none}
+.avbtn .pa{width:72px;height:72px;font-size:26px;box-shadow:0 6px 18px var(--glow)}
+.avbtn .cb{position:absolute;right:-2px;bottom:-2px;width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--a1);box-shadow:var(--shadow)}
+.avbtn .cb svg{width:15px;height:15px}
+.avpick .t{font-size:13.5px;color:var(--mute)}.avpick .t b{display:block;color:var(--text);font-size:15px;margin-bottom:2px}
+.avpick .rm{color:var(--a1);font-weight:600;font-size:13px;padding:0;margin-top:4px}
+.stack{display:flex;flex:none}.stack .pa{width:38px;height:38px;font-size:14px}.stack .pa+.pa{margin-left:-12px}
+.grp{display:flex;align-items:flex-end;gap:8px;align-self:stretch}.grp>.pa{width:30px;height:30px;font-size:12px;margin-bottom:2px}
+.grp .row{flex:1;min-width:0}.grp .sp{width:30px;flex:none}
 @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes fade{from{opacity:0}}@keyframes zoom{from{transform:scale(.9);opacity:0}}
@@ -134,6 +146,9 @@ header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-in
 <p class="sub" id="subt">Share a link. Every message is translated live for each person.</p>
 <div class="card">
 <div id="joinInfo" class="joininfo hide"><span style="font-size:22px">👋</span><div>You've been invited to a chat. Pick the language you speak and join.</div></div>
+<div class="avpick"><button class="avbtn" id="avBtn" aria-label="Add profile photo"><div class="pa" id="avPrev"></div><span class="cb"><svg class="icon"><use href="#i-cam"/></svg></span></button>
+<div class="t"><b>Profile photo</b>Optional · shown next to your messages<br><button class="rm hide" id="avRm">Remove photo</button></div></div>
+<input type="file" id="avFile" accept="image/*" class="hide">
 <div class="field"><label class="lbl" for="name">Your name</label><input id="name" class="inp" placeholder="e.g. Anthony" maxlength="30" autocomplete="given-name"></div>
 <div class="field"><label class="lbl">Language you speak</label>
 <div class="langpick"><div class="globe"><svg class="icon"><use href="#i-globe"/></svg></div><div class="t"><small>I speak</small><b id="langName">English</b></div><svg class="icon" style="color:var(--mute)"><use href="#i-down"/></svg><select id="lang" aria-label="Your language"></select></div>
@@ -147,7 +162,7 @@ header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-in
 </div></div>
 
 <div id="chat" class="hide">
-<header><div class="av"><svg class="icon"><use href="#i-chat"/></svg></div>
+<header><div class="stack" id="stack"><div class="av"><svg class="icon"><use href="#i-chat"/></svg></div></div>
 <div class="ht"><b>LinkChat</b><small><span class="dot" id="dot"></span><span id="badge">Connecting…</span></small></div>
 <label class="lpill" title="Your language"><svg class="icon"><use href="#i-globe"/></svg><span id="lpTxt">EN</span><select id="lang2" aria-label="Your language"></select></label>
 <button class="iconbtn themeBtn" aria-label="Toggle theme"><svg class="icon"><use href="#i-moon"/></svg></button>
@@ -185,7 +200,8 @@ $('setup').classList.add('hide');$('chat').classList.remove('hide');$('lang2').v
 function connect(){ws=new WebSocket((location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws?room='+room+'&name='+encodeURIComponent(me)+'&lang='+myLang);
 let first=true;ws.onopen=()=>{retry=0;$('dot').classList.remove('off')};
 ws.onmessage=e=>{const d=JSON.parse(e.data);
-if(d.type==='room'){$('badge').textContent=d.room.mode==='saved'?'Saved chat · online':'Disappearing · until '+new Date(d.room.expires).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});if(first){$('msgs').querySelectorAll('.row,.sys').forEach(x=>x.remove());lastSender=null;seen.clear();first=false}}
+if(d.type==='people'){people=d.people||{};renderPeople()}
+if(d.type==='room'){ws.send(JSON.stringify({type:'profile',avatar:myAvatar}));$('badge').textContent=d.room.mode==='saved'?'Saved chat · online':'Disappearing · until '+new Date(d.room.expires).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});if(first){$('msgs').querySelectorAll('.grp,.row,.sys').forEach(x=>x.remove());lastSender=null;seen.clear();first=false}}
 if(d.type==='error'){toast(d.error);if(/not found/i.test(d.error))dead=true}if(d.type==='sys')sys(d.text);if(d.type==='msg')add(d.msg)};
 ws.onclose=()=>{$('dot').classList.add('off');if(dead){$('badge').textContent='Room not found or expired';return}$('badge').textContent='Reconnecting…';setTimeout(connect,Math.min(8000,800*2**retry++))}}
 let dead=false;const seen=new Set();
@@ -206,7 +222,9 @@ else if(m.kind==='audio'){b.append(voiceEl(m,mine));if(m.text){const wrap=docume
 if(!same&&!mine){const o=document.createElement('div');o.className='o';o.innerHTML='<i>Said</i>';o.append(document.createTextNode(m.text));wrap.append(o)}b.append(wrap)}}
 else textBlock('Original');
 const meta=document.createElement('div');meta.className='meta';meta.textContent=new Date(m.ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+(mine||same?'':' · translated');b.append(meta);
-$('msgs').append(row);scroll()}
+if(!mine){const g=document.createElement('div');g.className='grp';g.append(avatarEl(m.name),row);const prev=$('msgs').lastElementChild;
+if(!row.classList.contains('first')&&prev?.classList.contains('grp')){const pa=prev.querySelector(':scope>.pa');if(pa){const sp=document.createElement('div');sp.className='sp';pa.replaceWith(sp)}}$('msgs').append(g)}
+else $('msgs').append(row);scroll()}
 function voiceEl(m,mine){const v=document.createElement('div');v.className='voice';
 if(!m.data){v.textContent='🎙️ Voice message no longer available';return v}
 const btn=document.createElement('button');btn.className='play';btn.setAttribute('aria-label','Play voice message');btn.innerHTML='<svg><use href="#i-play"/></svg>';
@@ -265,5 +283,22 @@ await new Promise(res=>{if(!sp)return res();sp.onend=res;try{sp.stop()}catch{res
 const blob=new Blob(chunks,{type:r.mimeType||'audio/webm'});if(blob.size>1e6)return toast('Voice message too long (max ~1 MB)');
 const data=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(blob)});
 send({kind:'audio',data,dur,text:transcript.trim()})};r.stop()}
+
+// avatars
+let people={},myAvatar=localStorage.avatar||'';
+const COLORS=['#7a5cff','#f97316','#10b981','#ec4899','#0ea5e9','#eab308','#ef4444','#14b8a6'];
+function avatarEl(name,cls){const e=document.createElement('div');e.className='pa'+(cls?' '+cls:'');e.dataset.name=name;paint(e,name);return e}
+function paint(e,name,src){const a=src!==undefined?src:people[name]?.avatar;if(a){e.style.backgroundImage='url("'+a+'")';e.textContent='';e.style.backgroundColor=''}
+else{e.style.backgroundImage='';let h=0;for(const c of name)h=(h*31+c.charCodeAt(0))>>>0;e.style.backgroundColor=COLORS[h%COLORS.length];e.textContent=(name.trim().split(/\s+/).map(w=>[...w][0]).slice(0,2).join('')||'?').toUpperCase()}}
+function paintPrev(){paint($('avPrev'),$('name').value.trim()||'?',myAvatar);$('avRm').classList.toggle('hide',!myAvatar)}
+$('name').addEventListener('input',paintPrev);paintPrev();
+$('avBtn').onclick=()=>$('avFile').click();$('avRm').onclick=()=>{myAvatar='';localStorage.removeItem('avatar');paintPrev()};
+$('avFile').onchange=async()=>{const f=$('avFile').files[0];$('avFile').value='';if(!f)return;try{myAvatar=await squareAvatar(f);try{localStorage.avatar=myAvatar}catch{}paintPrev()}catch{toast('Could not read that photo')}};
+async function squareAvatar(f){const url=URL.createObjectURL(f);const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});
+const S=256,c=document.createElement('canvas');c.width=c.height=S;const g=c.getContext('2d');const m=Math.min(img.naturalWidth,img.naturalHeight);
+g.drawImage(img,(img.naturalWidth-m)/2,(img.naturalHeight-m)/2,m,m,0,0,S,S);URL.revokeObjectURL(url);let q=.85,out;do{out=c.toDataURL('image/jpeg',q);q-=.1}while(out.length*.75>150*1024&&q>.3);if(out.length*.75>150*1024)throw 0;return out}
+function renderPeople(){document.querySelectorAll('.pa[data-name]').forEach(e=>paint(e,e.dataset.name));const st=$('stack');const others=Object.keys(people).filter(n=>n!==me).slice(-3);
+st.innerHTML='';if(!others.length){st.innerHTML='<div class="av"><svg class="icon"><use href="#i-chat"/></svg></div>';return}for(const n of others)st.append(avatarEl(n));
+const names=others.join(', ');document.querySelector('.ht b').textContent=names.length>22?others.length+' people':names}
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script></body></html>

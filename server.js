@@ -29,11 +29,14 @@ async function deliverNow(w,m){const t=m.lang===w.lang?m.text:await tr(m.text,w.
 wss.on('connection',(w,q)=>{const u=new URL(q.url,'http://x');const id=u.searchParams.get('room');const r=alive(id);if(!r){w.send(JSON.stringify({type:'error',error:'Room not found or expired'}));return w.close()}
 w.name=(u.searchParams.get('name')||'Guest').slice(0,30);w.lang=u.searchParams.get('lang')||'en';w.room=id;
 if(!clients.has(id))clients.set(id,new Set());clients.get(id).add(w);
-w.send(JSON.stringify({type:'room',room:{id:r.id,mode:r.mode,expires:r.expires}}));
+w.send(JSON.stringify({type:'room',room:{id:r.id,mode:r.mode,expires:r.expires}}));w.send(JSON.stringify({type:'people',people:r.people||{}}));
 for(const m of r.messages)deliver(w,m);
 const sys=t=>{for(const c of clients.get(id)||[])if(c.readyState===1)c.send(JSON.stringify({type:'sys',text:t}))};sys(w.name+' joined');
 w.on('message',async d=>{let j;try{j=JSON.parse(d)}catch{return}const rr=alive(id);if(!rr)return;
 if(j.type==='lang'){w.lang=String(j.lang);return}
+if(j.type==='profile'){const a=String(j.avatar||'');if(a&&(!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(a)||a.length*0.75>150*1024)){if(w.readyState===1)w.send(JSON.stringify({type:'error',error:'Profile photo too large or invalid'}));return}
+rr.people=rr.people||{};rr.people[w.name]={avatar:a||null,lang:w.lang,ts:Date.now()};const ks=Object.keys(rr.people);if(ks.length>50)delete rr.people[ks.sort((x,y)=>rr.people[x].ts-rr.people[y].ts)[0]];save(id);
+for(const c of clients.get(id)||[])if(c.readyState===1)c.send(JSON.stringify({type:'people',people:rr.people}));return}
 if(j.type!=='msg')return;const kind=['image','audio'].includes(j.kind)?j.kind:'text';const text=String(j.text||'').slice(0,2000);
 const m={id:crypto.randomUUID(),name:w.name,lang:w.lang,text,ts:Date.now()};
 if(kind==='text'){if(!text.trim())return}else{const data=String(j.data||'');const re=kind==='image'?/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/:/^data:audio\/[\w.+-]+(;[\w=.-]+)*;base64,[A-Za-z0-9+\/=]+$/;
