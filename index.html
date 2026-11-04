@@ -1,49 +1,269 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LinkChat</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<title>LinkChat</title>
+<meta name="description" content="Chat across languages, live. Share a link and talk.">
+<meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0d14" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="LinkChat">
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#0b0d12;color:#e8eaf0;height:100dvh;display:flex;flex-direction:column}
-.card{max-width:440px;margin:auto;padding:28px;background:#151923;border-radius:20px;width:92%;box-shadow:0 10px 40px #0008}
-h1{margin:0 0 4px;font-size:28px;background:linear-gradient(90deg,#7c5cff,#22d3ee);-webkit-background-clip:text;color:transparent}
-p.sub{color:#8a90a2;margin:0 0 20px}label{font-size:13px;color:#8a90a2;display:block;margin:12px 0 6px}
-input,select,button{width:100%;padding:13px;border-radius:12px;border:1px solid #2a3040;background:#0f1219;color:#e8eaf0;font-size:16px}
-button{background:linear-gradient(90deg,#7c5cff,#5b8cff);border:0;font-weight:600;margin-top:18px;cursor:pointer}button:active{transform:scale(.98)}
-.modes{display:flex;gap:8px}.modes div{flex:1;padding:12px;border:1px solid #2a3040;border-radius:12px;cursor:pointer;font-size:14px}.modes .on{border-color:#7c5cff;background:#7c5cff22}
-header{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#151923;border-bottom:1px solid #222838}
-header b{flex:1}header button,header select{width:auto;margin:0;padding:8px 12px;font-size:14px}
-#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
-.m{max-width:80%;padding:10px 14px;border-radius:18px;background:#1d2230;animation:pop .25s ease-out;align-self:flex-start}
-.m.me{align-self:flex-end;background:linear-gradient(135deg,#7c5cff,#5b8cff)}
-.m .n{font-size:12px;opacity:.7}.m .o{font-size:12px;opacity:.65;margin-top:4px;font-style:italic}
-.sys{align-self:center;font-size:12px;color:#8a90a2;animation:pop .25s}
-@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
-form{display:flex;gap:8px;padding:10px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:#151923}form button{width:auto;margin:0}
-.badge{font-size:11px;padding:3px 8px;border-radius:10px;background:#22d3ee22;color:#22d3ee}.hide{display:none!important}
+:root{--bg:#f6f6fb;--bg2:#ffffff;--surface:#ffffff;--line:#e7e7f0;--text:#14141f;--mute:#6d6f82;--in:#ffffff;--inT:#14141f;
+--a1:#6d5dfc;--a2:#3b82f6;--grad:linear-gradient(135deg,#7a5cff 0%,#4f7dff 100%);--glow:#6d5dfc33;--shadow:0 1px 2px #1a1a3a0d,0 8px 24px #1a1a3a12;--danger:#ef4444;color-scheme:light}
+[data-theme=dark]{--bg:#0c0d14;--bg2:#12131c;--surface:#171823;--line:#252736;--text:#ececf5;--mute:#8b8da3;--in:#1d1f2c;--inT:#ececf5;--glow:#7a5cff40;--shadow:0 1px 2px #0006,0 10px 30px #0008;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}body{margin:0;font:16px/1.4 "Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;overflow:hidden}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+.hide{display:none!important}
+.icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* landing */
+#setup{height:100dvh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:max(20px,env(safe-area-inset-top)) 20px 28px;position:relative}
+.blob{position:fixed;width:420px;height:420px;border-radius:50%;filter:blur(80px);opacity:.35;z-index:0;pointer-events:none}
+.b1{background:#7a5cff;top:-160px;left:-140px}.b2{background:#22c1ee;top:-120px;right:-180px;opacity:.25}
+[data-theme=dark] .blob{opacity:.22}
+.topbar{width:100%;max-width:440px;display:flex;justify-content:flex-end;z-index:1}
+.wrap{width:100%;max-width:440px;z-index:1;animation:rise .5s cubic-bezier(.2,.8,.2,1)}
+.logo{width:64px;height:64px;border-radius:20px;background:var(--grad);display:grid;place-items:center;box-shadow:0 10px 30px var(--glow);margin:18px 0 18px}
+.logo svg{width:34px;height:34px;stroke:#fff}
+h1{font-size:34px;line-height:1.1;letter-spacing:-.03em;margin:0 0 8px;font-weight:800}
+h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mute);margin:0 0 26px;font-size:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+.lbl{font-size:13px;font-weight:600;color:var(--mute);margin:0 0 8px;display:block;letter-spacing:.01em}
+.field{margin-bottom:18px}
+.inp{width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);outline:none;font-size:16px;transition:border .2s,box-shadow .2s}
+.inp:focus{border-color:var(--a1);box-shadow:0 0 0 4px var(--glow)}
+.langpick{position:relative;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;border:1.5px solid var(--a1);background:linear-gradient(var(--surface),var(--surface)) padding-box;box-shadow:0 0 0 4px var(--glow)}
+.langpick .globe{width:40px;height:40px;border-radius:12px;background:var(--grad);display:grid;place-items:center;flex:none}.langpick .globe svg{stroke:#fff}
+.langpick .t{flex:1;min-width:0}.langpick small{display:block;color:var(--mute);font-size:12px;font-weight:600}
+.langpick b{font-size:18px;font-weight:700}
+.langpick select{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer;font-size:16px}
+.hint{font-size:12.5px;color:var(--mute);margin:8px 2px 0}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{text-align:left;padding:14px;border-radius:16px;border:1.5px solid var(--line);background:var(--bg);transition:all .2s}
+.mode .e{font-size:22px}.mode b{display:block;font-size:15px;margin-top:6px}.mode small{color:var(--mute);font-size:12.5px}
+.mode.on{border-color:var(--a1);background:color-mix(in srgb,var(--a1) 9%,var(--surface));box-shadow:0 0 0 4px var(--glow)}
+.cta{width:100%;padding:16px;border-radius:16px;background:var(--grad);color:#fff;font-weight:700;font-size:17px;box-shadow:0 10px 24px var(--glow);transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.cta:active{transform:scale(.98)}.cta svg{stroke:#fff}
+.joininfo{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--a1) 9%,transparent);margin-bottom:18px;font-size:14px}
+.feats{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px;justify-content:center}
+.feats span{font-size:12.5px;color:var(--mute);padding:6px 11px;border-radius:99px;background:var(--surface);border:1px solid var(--line)}
+.iconbtn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--text);transition:background .2s}
+.iconbtn:hover,.iconbtn:active{background:color-mix(in srgb,var(--text) 8%,transparent)}
+/* chat */
+#chat{height:100dvh;display:flex;flex-direction:column;background:var(--bg)}
+header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 12px 10px;background:color-mix(in srgb,var(--bg2) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);z-index:2}
+.av{width:38px;height:38px;border-radius:12px;background:var(--grad);display:grid;place-items:center;flex:none}.av svg{width:20px;height:20px;stroke:#fff}
+.ht{flex:1;min-width:0}.ht b{display:block;font-size:16px}.ht small{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none}.dot.off{background:#aaa}
+.lpill{position:relative;display:flex;align-items:center;gap:5px;padding:8px 11px;border-radius:99px;background:color-mix(in srgb,var(--a1) 12%,transparent);color:var(--a1);font-weight:700;font-size:13px}
+[data-theme=dark] .lpill{color:#a99bff}
+.lpill svg{width:16px;height:16px}.lpill select{position:absolute;inset:0;opacity:0;font-size:16px}
+#msgs{flex:1;overflow-y:auto;padding:16px 12px 8px;display:flex;flex-direction:column;gap:3px;overscroll-behavior:contain}
+.day{align-self:center;font-size:12px;color:var(--mute);padding:4px 12px;border-radius:99px;background:var(--surface);border:1px solid var(--line);margin:4px 0 10px}
+.sys{align-self:center;font-size:12px;color:var(--mute);margin:8px 0;animation:fade .3s}
+.row{display:flex;flex-direction:column;align-items:flex-start;animation:pop .32s cubic-bezier(.2,.9,.3,1.2)}
+.row.me{align-items:flex-end}.row.first{margin-top:10px}
+.who{font-size:12px;color:var(--mute);margin:0 12px 4px;font-weight:600}
+.m{max-width:min(80%,520px);padding:10px 14px;border-radius:20px;background:var(--in);color:var(--inT);box-shadow:0 1px 2px #0000000f;border:1px solid var(--line);word-wrap:break-word;overflow-wrap:anywhere}
+.row:not(.me) .m{border-bottom-left-radius:6px}
+.row.me .m{background:var(--grad);color:#fff;border:0;border-bottom-right-radius:6px;box-shadow:0 4px 14px var(--glow)}
+.m .x{white-space:pre-wrap}.m .o{font-size:12.5px;opacity:.7;margin-top:6px;padding-top:6px;border-top:1px solid color-mix(in srgb,currentColor 15%,transparent);white-space:pre-wrap}
+.m .o i{font-style:normal;font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;opacity:.8;margin-right:4px}
+.meta{font-size:10.5px;opacity:.6;margin-top:4px;text-align:right}
+.m.photo{padding:4px;overflow:hidden}.m.photo img{display:block;width:100%;max-width:280px;max-height:340px;object-fit:cover;border-radius:16px;cursor:zoom-in;background:#8882}
+.m.photo .cap{padding:6px 10px 4px}
+.voice{display:flex;align-items:center;gap:10px;min-width:210px}
+.play{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--a1) 14%,transparent);color:var(--a1);flex:none}
+.row.me .play{background:#ffffff33;color:#fff}.play svg{width:18px;height:18px;fill:currentColor;stroke:none}
+.wave{flex:1;display:flex;align-items:center;gap:2px;height:30px;cursor:pointer}
+.wave i{flex:1;max-width:4px;min-height:5px;border-radius:3px;background:currentColor;opacity:.3;transition:opacity .15s}.wave i.p{opacity:1}
+.dur{font-size:12px;opacity:.75;font-variant-numeric:tabular-nums;min-width:32px}
+/* composer */
+.composer{padding:8px 10px max(10px,env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg2) 85%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+#preview{display:flex;align-items:center;gap:10px;padding:8px;margin:0 2px 8px;border-radius:16px;background:var(--surface);border:1px solid var(--line);animation:rise .25s}
+#preview img{width:56px;height:56px;object-fit:cover;border-radius:12px}#preview div{flex:1;font-size:13px;color:var(--mute)}
+.bar{display:flex;align-items:flex-end;gap:6px}
+.box{flex:1;display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--line);border-radius:24px;padding:4px 4px 4px 16px;transition:border .2s,box-shadow .2s;min-height:48px}
+.box:focus-within{border-color:var(--a1);box-shadow:0 0 0 4px var(--glow)}
+#t{flex:1;border:0;outline:0;background:none;font-size:16px;padding:8px 0;min-width:0}
+.cbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--mute);flex:none;transition:all .2s}
+.cbtn:active{transform:scale(.9)}
+.send{width:48px;height:48px;border-radius:50%;background:var(--grad);display:grid;place-items:center;flex:none;box-shadow:0 6px 16px var(--glow);transition:transform .15s;touch-action:none;user-select:none;-webkit-user-select:none}
+.send svg{stroke:#fff}.send:active{transform:scale(.92)}
+.send.rec{background:var(--danger);transform:scale(1.15);box-shadow:0 0 0 8px #ef444433,0 0 0 16px #ef44441a;animation:pulse 1.2s infinite}
+#recbar{flex:1;display:flex;align-items:center;gap:10px;padding:0 16px;height:48px;border-radius:24px;background:var(--surface);border:1.5px solid var(--danger);color:var(--danger);font-weight:600;font-variant-numeric:tabular-nums}
+#recbar .rd{width:10px;height:10px;border-radius:50%;background:var(--danger);animation:blink 1s infinite}
+#recbar span.h{flex:1;text-align:right;font-weight:500;font-size:13px;color:var(--mute)}
+#recbar.cancel{border-color:var(--mute);color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:20;animation:rise .25s;max-width:90%;text-align:center}
+#lb{position:fixed;inset:0;background:#000e;z-index:30;display:grid;place-items:center;animation:fade .2s;cursor:zoom-out}
+#lb img{max-width:100vw;max-height:100dvh;object-fit:contain;animation:zoom .25s cubic-bezier(.2,.8,.2,1)}
+.empty{margin:auto;text-align:center;color:var(--mute);padding:30px;animation:fade .5s}
+.empty .bubble{width:72px;height:72px;margin:0 auto 14px;border-radius:24px;background:color-mix(in srgb,var(--a1) 12%,transparent);display:grid;place-items:center;color:var(--a1)}
+.empty b{display:block;color:var(--text);font-size:17px;margin-bottom:4px}
+.empty button{margin-top:14px;padding:10px 18px;border-radius:99px;background:var(--grad);color:#fff;font-weight:600;font-size:14px}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}}@keyframes zoom{from{transform:scale(.9);opacity:0}}
+@keyframes blink{50%{opacity:.2}}@keyframes pulse{50%{box-shadow:0 0 0 12px #ef444433,0 0 0 24px #ef444411}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
-<div id="setup" class="card"><h1>LinkChat</h1><p class="sub">Chat across languages, live.</p>
-<label>Your name</label><input id="name" placeholder="e.g. Anthony">
-<label>Your language</label><select id="lang"></select>
-<div id="modeBox"><label>Room type</label><div class="modes"><div data-m="saved" class="on">💾 Saved<br><small>History kept</small></div><div data-m="disappearing">⏳ Disappearing<br><small>Expires in 2h</small></div></div></div>
-<button id="go">Create room</button></div>
-<div id="chat" class="hide" style="display:flex;flex-direction:column;height:100dvh">
-<header><b>LinkChat <span id="badge" class="badge"></span></b><select id="lang2"></select><button id="share">🔗 Share</button></header>
-<div id="msgs"></div><form id="f"><input id="t" placeholder="Type a message…" autocomplete="off"><button>Send</button></form></div>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 13.5h4"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-cam" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</defs></svg>
+
+<div id="setup"><div class="blob b1"></div><div class="blob b2"></div>
+<div class="topbar"><button class="iconbtn themeBtn" aria-label="Toggle theme"><svg class="icon"><use href="#i-moon"/></svg></button></div>
+<div class="wrap">
+<div class="logo"><svg class="icon"><use href="#i-chat"/></svg></div>
+<h1 id="h1">Talk to anyone,<br><em>in any language.</em></h1>
+<p class="sub" id="subt">Share a link. Every message is translated live for each person.</p>
+<div class="card">
+<div id="joinInfo" class="joininfo hide"><span style="font-size:22px">👋</span><div>You've been invited to a chat. Pick the language you speak and join.</div></div>
+<div class="field"><label class="lbl" for="name">Your name</label><input id="name" class="inp" placeholder="e.g. Anthony" maxlength="30" autocomplete="given-name"></div>
+<div class="field"><label class="lbl">Language you speak</label>
+<div class="langpick"><div class="globe"><svg class="icon"><use href="#i-globe"/></svg></div><div class="t"><small>I speak</small><b id="langName">English</b></div><svg class="icon" style="color:var(--mute)"><use href="#i-down"/></svg><select id="lang" aria-label="Your language"></select></div>
+<p class="hint">Messages from others will be translated into this language.</p></div>
+<div class="field" id="modeBox"><label class="lbl">Room type</label><div class="modes">
+<button class="mode on" data-m="saved"><div class="e">💾</div><b>Saved</b><small>History is kept</small></button>
+<button class="mode" data-m="disappearing"><div class="e">⏳</div><b>Disappearing</b><small>Gone after 2 hours</small></button></div></div>
+<button id="go" class="cta"><span>Create room</span><svg class="icon"><use href="#i-arrow"/></svg></button>
+</div>
+<div class="feats"><span>🌍 20 languages</span><span>🎙️ Voice notes</span><span>📷 Photos</span><span>🔒 No sign-up</span></div>
+</div></div>
+
+<div id="chat" class="hide">
+<header><div class="av"><svg class="icon"><use href="#i-chat"/></svg></div>
+<div class="ht"><b>LinkChat</b><small><span class="dot" id="dot"></span><span id="badge">Connecting…</span></small></div>
+<label class="lpill" title="Your language"><svg class="icon"><use href="#i-globe"/></svg><span id="lpTxt">EN</span><select id="lang2" aria-label="Your language"></select></label>
+<button class="iconbtn themeBtn" aria-label="Toggle theme"><svg class="icon"><use href="#i-moon"/></svg></button>
+<button class="iconbtn" id="share" aria-label="Share link"><svg class="icon"><use href="#i-share"/></svg></button></header>
+<div id="msgs"><div class="empty" id="empty"><div class="bubble"><svg class="icon" style="width:32px;height:32px"><use href="#i-chat"/></svg></div><b>Your room is ready</b>Send the link to someone. They'll pick their language and you'll each read the chat in your own.<br><button id="share2">Share invite link</button></div></div>
+<div class="composer">
+<div id="preview" class="hide"><img id="pvImg" alt=""><div>Photo ready · add a caption (optional)</div><button class="cbtn" id="pvX" aria-label="Remove photo"><svg class="icon"><use href="#i-x"/></svg></button></div>
+<div class="bar">
+<div class="box" id="box"><input id="t" placeholder="Message" autocomplete="off" enterkeyhint="send"><button class="cbtn" id="cam" aria-label="Send photo"><svg class="icon"><use href="#i-cam"/></svg></button></div>
+<div id="recbar" class="hide"><span class="rd"></span><span id="recT">0:00</span><span class="h" id="recH">Slide ← to cancel</span></div>
+<button class="send" id="sendBtn" aria-label="Send or hold to record"><svg class="icon" id="sendIco"><use href="#i-mic"/></svg></button>
+</div></div>
+<input type="file" id="file" accept="image/*" class="hide">
+</div>
+
 <script>
 const L={en:'English',es:'Español',fr:'Français',de:'Deutsch',it:'Italiano',pt:'Português',ru:'Русский',zh:'中文',ja:'日本語',ko:'한국어',ar:'العربية',hi:'हिन्दी',tr:'Türkçe',vi:'Tiếng Việt',tl:'Filipino',pl:'Polski',nl:'Nederlands',uk:'Українська',fa:'فارسی',sw:'Kiswahili'};
-const $=id=>document.getElementById(id);for(const s of[$('lang'),$('lang2')])for(const k in L)s.add(new Option(L[k],k));
-$('lang').value=localStorage.lang||(navigator.language||'en').slice(0,2);if(!$('lang').value)$('lang').value='en';$('name').value=localStorage.name||'';
-let mode='saved',room=new URLSearchParams(location.search).get('room'),ws,me;
-document.querySelectorAll('.modes div').forEach(d=>d.onclick=()=>{document.querySelectorAll('.modes div').forEach(x=>x.classList.remove('on'));d.classList.add('on');mode=d.dataset.m});
-if(room){$('modeBox').classList.add('hide');$('go').textContent='Join chat'}
-$('go').onclick=async()=>{me=$('name').value.trim()||'Guest';localStorage.name=me;localStorage.lang=$('lang').value;
-if(!room){const r=await(await fetch('/api/rooms',{method:'POST',body:JSON.stringify({mode})})).json();room=r.id;history.replaceState(0,'','?room='+room)}connect()};
-function connect(){$('setup').classList.add('hide');$('chat').classList.remove('hide');$('lang2').value=$('lang').value;
-ws=new WebSocket((location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws?room='+room+'&name='+encodeURIComponent(me)+'&lang='+$('lang').value);
-ws.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==='room')$('badge').textContent=d.room.mode==='saved'?'Saved':'Disappearing · until '+new Date(d.room.expires).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
-if(d.type==='error')sys(d.error);if(d.type==='sys')sys(d.text);if(d.type==='msg')add(d.msg)};ws.onclose=()=>sys('Disconnected — refresh to reconnect')}
-function sys(t){const e=document.createElement('div');e.className='sys';e.textContent=t;$('msgs').append(e);e.scrollIntoView()}
-function add(m){const e=document.createElement('div');e.className='m'+(m.name===me?' me':'');const same=m.translated===m.text;
-e.innerHTML='<div class="n"></div><div class="x"></div>'+(same?'':'<div class="o"></div>');e.querySelector('.n').textContent=m.name+' · '+(L[m.lang]||m.lang);
-e.querySelector('.x').textContent=m.translated;if(!same)e.querySelector('.o').textContent='Original: '+m.text;$('msgs').append(e);e.scrollIntoView({behavior:'smooth'})}
-$('f').onsubmit=e=>{e.preventDefault();const t=$('t').value.trim();if(t&&ws.readyState==1){ws.send(JSON.stringify({type:'msg',text:t}));$('t').value=''}};
-$('lang2').onchange=()=>{localStorage.lang=$('lang2').value;ws.send(JSON.stringify({type:'lang',lang:$('lang2').value}))};
-$('share').onclick=async()=>{const u=location.origin+'/?room='+room;if(navigator.share)try{await navigator.share({title:'Join my LinkChat',url:u});return}catch{}await navigator.clipboard.writeText(u);$('share').textContent='✓ Copied';setTimeout(()=>$('share').textContent='🔗 Share',1500)};
+const SR={en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',pt:'pt-BR',ru:'ru-RU',zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',ar:'ar-SA',hi:'hi-IN',tr:'tr-TR',vi:'vi-VN',tl:'fil-PH',pl:'pl-PL',nl:'nl-NL',uk:'uk-UA',fa:'fa-IR',sw:'sw-KE'};
+const $=id=>document.getElementById(id);
+for(const s of[$('lang'),$('lang2')])for(const k in L)s.add(new Option(L[k],k));
+const nav=(navigator.language||'en').slice(0,2);$('lang').value=localStorage.lang||(L[nav]?nav:'en');$('name').value=localStorage.name||'';
+const showLang=()=>{$('langName').textContent=L[$('lang').value]};showLang();$('lang').onchange=showLang;
+// theme
+function applyTheme(t){document.documentElement.dataset.theme=t;document.querySelectorAll('.themeBtn use').forEach(u=>u.setAttribute('href',t==='dark'?'#i-sun':'#i-moon'));
+document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=t==='dark'?'#0c0d14':'#f6f6fb')}
+const mq=matchMedia('(prefers-color-scheme: dark)');applyTheme(localStorage.theme||(mq.matches?'dark':'light'));
+mq.onchange=e=>{if(!localStorage.theme)applyTheme(e.matches?'dark':'light')};
+document.querySelectorAll('.themeBtn').forEach(b=>b.onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.theme=t;applyTheme(t)});
+let mode='saved',room=new URLSearchParams(location.search).get('room'),ws,me,myLang,lastSender=null,retry=0;
+document.querySelectorAll('.mode').forEach(d=>d.onclick=()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('on'));d.classList.add('on');mode=d.dataset.m});
+if(room){$('modeBox').classList.add('hide');$('joinInfo').classList.remove('hide');$('go').firstElementChild.textContent='Join chat';$('h1').innerHTML='You\'re invited<br><em>to chat.</em>';$('subt').textContent='Choose your language — you\'ll read everything in it.'}
+$('go').onclick=async()=>{me=$('name').value.trim()||'Guest';localStorage.name=me;myLang=$('lang').value;localStorage.lang=myLang;
+if(!room){try{const r=await(await fetch('/api/rooms',{method:'POST',body:JSON.stringify({mode})})).json();room=r.id;history.replaceState(0,'','?room='+room)}catch{return toast('Could not create room. Check your connection.')}}
+$('setup').classList.add('hide');$('chat').classList.remove('hide');$('lang2').value=myLang;$('lpTxt').textContent=myLang.toUpperCase();connect()};
+function connect(){ws=new WebSocket((location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws?room='+room+'&name='+encodeURIComponent(me)+'&lang='+myLang);
+let first=true;ws.onopen=()=>{retry=0;$('dot').classList.remove('off')};
+ws.onmessage=e=>{const d=JSON.parse(e.data);
+if(d.type==='room'){$('badge').textContent=d.room.mode==='saved'?'Saved chat · online':'Disappearing · until '+new Date(d.room.expires).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});if(first){$('msgs').querySelectorAll('.row,.sys').forEach(x=>x.remove());lastSender=null;seen.clear();first=false}}
+if(d.type==='error'){toast(d.error);if(/not found/i.test(d.error))dead=true}if(d.type==='sys')sys(d.text);if(d.type==='msg')add(d.msg)};
+ws.onclose=()=>{$('dot').classList.add('off');if(dead){$('badge').textContent='Room not found or expired';return}$('badge').textContent='Reconnecting…';setTimeout(connect,Math.min(8000,800*2**retry++))}}
+let dead=false;const seen=new Set();
+function hideEmpty(){$('empty')?.classList.add('hide')}
+function sys(t){const e=document.createElement('div');e.className='sys';e.textContent=t;$('msgs').append(e);lastSender=null;scroll()}
+function scroll(){const m=$('msgs');requestAnimationFrame(()=>m.scrollTo({top:m.scrollHeight,behavior:'smooth'}))}
+const fmt=s=>{s=Math.max(0,Math.round(s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function add(m){if(seen.has(m.id))return;seen.add(m.id);hideEmpty();const mine=m.name===me&&m.lang===myLang||m.name===me;
+const row=document.createElement('div');row.className='row'+(mine?' me':'')+(lastSender!==m.name?' first':'');
+if(lastSender!==m.name&&!mine){const w=document.createElement('div');w.className='who';w.textContent=m.name+' · '+(L[m.lang]||m.lang);row.append(w)}
+lastSender=m.name;const b=document.createElement('div');b.className='m';row.append(b);
+const same=!m.text||m.translated===m.text;
+const textBlock=(label)=>{if(!m.text)return;const x=document.createElement('div');x.className='x';x.textContent=mine?m.text:m.translated;b.append(x);
+if(!same&&!mine){const o=document.createElement('div');o.className='o';o.innerHTML='<i>'+label+'</i>';o.append(document.createTextNode(m.text));b.append(o)}};
+if(m.kind==='image'){b.classList.add('photo');if(m.data){const img=new Image();img.src=m.data;img.alt='Photo from '+m.name;img.onclick=()=>lightbox(m.data);img.onload=scroll;b.append(img)}else{b.append(Object.assign(document.createElement('div'),{className:'cap',textContent:'📷 Photo no longer available'}))}
+if(m.text){const c=document.createElement('div');c.className='cap';b.append(c);(function(){const x=document.createElement('div');x.className='x';x.textContent=mine?m.text:m.translated;c.append(x);if(!same&&!mine){const o=document.createElement('div');o.className='o';o.innerHTML='<i>Original</i>';o.append(document.createTextNode(m.text));c.append(o)}})()}}
+else if(m.kind==='audio'){b.append(voiceEl(m,mine));if(m.text){const wrap=document.createElement('div');wrap.style.marginTop='8px';wrap.style.fontSize='14.5px';const x=document.createElement('div');x.className='x';x.textContent='“'+(mine?m.text:m.translated)+'”';wrap.append(x);
+if(!same&&!mine){const o=document.createElement('div');o.className='o';o.innerHTML='<i>Said</i>';o.append(document.createTextNode(m.text));wrap.append(o)}b.append(wrap)}}
+else textBlock('Original');
+const meta=document.createElement('div');meta.className='meta';meta.textContent=new Date(m.ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+(mine||same?'':' · translated');b.append(meta);
+$('msgs').append(row);scroll()}
+function voiceEl(m,mine){const v=document.createElement('div');v.className='voice';
+if(!m.data){v.textContent='🎙️ Voice message no longer available';return v}
+const btn=document.createElement('button');btn.className='play';btn.setAttribute('aria-label','Play voice message');btn.innerHTML='<svg><use href="#i-play"/></svg>';
+const wave=document.createElement('div');wave.className='wave';let seed=0;for(const c of m.id)seed=(seed*31+c.charCodeAt(0))>>>0;
+const N=28;for(let i=0;i<N;i++){seed=(seed*1103515245+12345)>>>0;const h=25+((seed>>16)%75);const bar=document.createElement('i');bar.style.height=h+'%';wave.append(bar)}
+const dur=document.createElement('span');dur.className='dur';dur.textContent=fmt(m.dur);v.append(btn,wave,dur);
+let a;const bars=[...wave.children];
+const ensure=()=>{if(a)return a;a=new Audio(m.data);a.preload='metadata';a.ontimeupdate=()=>{const d=isFinite(a.duration)?a.duration:m.dur||1;const p=a.currentTime/d;bars.forEach((x,i)=>x.classList.toggle('p',i/N<p));dur.textContent=fmt(d-a.currentTime)};
+a.onended=()=>{btn.innerHTML='<svg><use href="#i-play"/></svg>';bars.forEach(x=>x.classList.remove('p'));dur.textContent=fmt(m.dur)};a.onpause=()=>btn.innerHTML='<svg><use href="#i-play"/></svg>';a.onplay=()=>btn.innerHTML='<svg><use href="#i-pause"/></svg>';return a};
+btn.onclick=()=>{const x=ensure();if(x.paused){document.querySelectorAll('audio').forEach(()=>{});x.play().catch(()=>toast('Could not play this voice message on this device'))}else x.pause()};
+wave.onclick=e=>{const x=ensure();const r=wave.getBoundingClientRect();const d=isFinite(x.duration)?x.duration:m.dur;if(d)x.currentTime=d*(e.clientX-r.left)/r.width;if(x.paused)x.play().catch(()=>{})};
+return v}
+function lightbox(src){const d=document.createElement('div');d.id='lb';const i=new Image();i.src=src;d.append(i);d.onclick=()=>d.remove();document.body.append(d)}
+let toastT;function toast(t){document.querySelector('.toast')?.remove();const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.append(e);clearTimeout(toastT);toastT=setTimeout(()=>e.remove(),2600)}
+function send(o){if(!ws||ws.readyState!==1){toast('Not connected yet — try again in a moment');return false}ws.send(JSON.stringify({type:'msg',...o}));return true}
+// composer state
+let photo=null;const ico=$('sendIco').firstElementChild;
+function upd(){ico.setAttribute('href',($('t').value.trim()||photo)?'#i-send':'#i-mic')}
+$('t').oninput=upd;$('t').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();doSend()}};
+function doSend(){const t=$('t').value.trim();if(photo){if(send({kind:'image',data:photo,text:t})){clearPhoto();$('t').value=''}}else if(t&&send({text:t}))$('t').value='';upd()}
+$('lang2').onchange=()=>{myLang=$('lang2').value;localStorage.lang=myLang;$('lpTxt').textContent=myLang.toUpperCase();ws?.readyState===1&&ws.send(JSON.stringify({type:'lang',lang:myLang}));toast('Now translating into '+L[myLang]+' (new messages)')};
+async function share(){const u=location.origin+'/?room='+room;if(navigator.share)try{await navigator.share({title:'Join my LinkChat',text:'Chat with me — it translates live!',url:u});return}catch(e){if(e.name==='AbortError')return}
+try{await navigator.clipboard.writeText(u);toast('Invite link copied')}catch{prompt('Copy this link',u)}}
+$('share').onclick=share;$('share2').onclick=share;
+// photos
+$('cam').onclick=()=>$('file').click();
+$('file').onchange=async()=>{const f=$('file').files[0];$('file').value='';if(!f)return;try{photo=await resize(f);$('pvImg').src=photo;$('preview').classList.remove('hide');$('t').placeholder='Add a caption…';$('t').focus();upd()}catch{toast('Could not read that photo')}};
+$('pvX').onclick=clearPhoto;function clearPhoto(){photo=null;$('preview').classList.add('hide');$('t').placeholder='Message';upd()}
+async function resize(f){const url=URL.createObjectURL(f);const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});
+let max=1280,q=.82,out;for(let k=0;k<6;k++){const s=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*s);c.height=Math.round(img.naturalHeight*s);
+const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0,c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length*.75<1.9e6)break;q-=.12;max*=.8}
+URL.revokeObjectURL(url);if(out.length*.75>2e6)throw 0;return out}
+// voice: tap = send text, hold = record
+let rec=null,recStart=0,recTimer,chunks=[],speech=null,transcript='',cancelX=0,canceled=false;
+const sb=$('sendBtn');
+sb.addEventListener('contextmenu',e=>e.preventDefault());
+sb.onpointerdown=async e=>{if($('t').value.trim()||photo){return}e.preventDefault();sb.setPointerCapture?.(e.pointerId);cancelX=e.clientX;canceled=false;startRec()};
+sb.onpointermove=e=>{if(!rec)return;const c=cancelX-e.clientX>80;if(c!==canceled){canceled=c;$('recbar').classList.toggle('cancel',c);$('recH').textContent=c?'Release to cancel':'Slide ← to cancel'}};
+sb.onpointerup=e=>{if(rec)stopRec(!canceled);else if(pending){pending=false;stopAfterStart=true}};
+sb.onpointercancel=()=>{if(rec)stopRec(false)};
+sb.onclick=()=>{if($('t').value.trim()||photo)doSend()};
+let pending=false,stopAfterStart=false;
+async function startRec(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)return toast('Voice messages aren\'t supported in this browser');
+pending=true;stopAfterStart=false;let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch{pending=false;return toast('Allow microphone access to send voice messages')}
+if(stopAfterStart){stream.getTracks().forEach(t=>t.stop());pending=false;return toast('Hold the mic button to record')}pending=false;
+const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported?.(t))||'';
+rec=new MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:32000}:{audioBitsPerSecond:32000});chunks=[];rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);rec.start(250);recStart=Date.now();
+navigator.vibrate?.(15);sb.classList.add('rec');$('box').classList.add('hide');$('recbar').classList.remove('hide');$('recbar').classList.remove('cancel');$('recT').textContent='0:00';
+recTimer=setInterval(()=>{const s=(Date.now()-recStart)/1000;$('recT').textContent=fmt(s);if(s>=120)stopRec(true)},250);
+transcript='';const S=window.SpeechRecognition||window.webkitSpeechRecognition;if(S){try{speech=new S();speech.lang=SR[myLang]||myLang;speech.continuous=true;speech.interimResults=true;
+speech.onresult=ev=>{let t='';for(const r of ev.results)t+=r[0].transcript;transcript=t};speech.onerror=()=>{};speech.start()}catch{speech=null}}}
+function stopRec(ok){const r=rec;rec=null;clearInterval(recTimer);sb.classList.remove('rec');$('box').classList.remove('hide');$('recbar').classList.add('hide');
+const dur=(Date.now()-recStart)/1000;const sp=speech;speech=null;
+r.onstop=async()=>{r.stream.getTracks().forEach(t=>t.stop());if(!ok)return toast('Voice message canceled');if(dur<0.6)return toast('Hold to record a voice message');
+await new Promise(res=>{if(!sp)return res();sp.onend=res;try{sp.stop()}catch{res()}setTimeout(res,1200)});
+const blob=new Blob(chunks,{type:r.mimeType||'audio/webm'});if(blob.size>1e6)return toast('Voice message too long (max ~1 MB)');
+const data=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(blob)});
+send({kind:'audio',data,dur,text:transcript.trim()})};r.stop()}
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script></body></html>
