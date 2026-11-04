@@ -116,6 +116,39 @@ header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-in
 .stack{display:flex;flex:none}.stack .pa{width:38px;height:38px;font-size:14px}.stack .pa+.pa{margin-left:-12px}
 .grp{display:flex;align-items:flex-end;gap:8px;align-self:stretch}.grp>.pa{width:30px;height:30px;font-size:12px;margin-bottom:2px}
 .grp .row{flex:1;min-width:0}.grp .sp{width:30px;flex:none}
+/* family, members, qr, simple */
+.mode.fam{grid-column:1/-1;display:flex;align-items:center;gap:12px}.mode.fam .e{font-size:26px}.mode.fam b{margin-top:0}
+.mode .tag{margin-left:auto;font-size:11px;font-weight:700;color:#fff;background:var(--grad);padding:3px 8px;border-radius:99px}
+.simpleRow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;border:1.5px solid var(--line);background:var(--bg);margin-bottom:18px;width:100%;text-align:left}
+.simpleRow .t{flex:1}.simpleRow b{display:block;font-size:15px}.simpleRow small{color:var(--mute);font-size:12.5px}
+.sw{width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .2s}.sw::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:transform .2s}
+.on>.sw,.sw.on{background:var(--a1)}.on>.sw::after,.sw.on::after{transform:translateX(18px)}
+.cnt{position:absolute;top:2px;right:0;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:var(--a1);color:#fff;font-size:10.5px;font-weight:700;display:grid;place-items:center}
+.sheet{position:fixed;inset:0;z-index:25;background:#0007;display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+.sheet .pn{width:100%;max-width:480px;max-height:85dvh;overflow-y:auto;background:var(--surface);border-radius:26px 26px 0 0;padding:18px 18px max(22px,env(safe-area-inset-bottom));animation:rise .3s cubic-bezier(.2,.8,.2,1)}
+.pn h3{margin:0 0 4px;font-size:19px;display:flex;align-items:center;justify-content:space-between}.pn .sub2{color:var(--mute);font-size:13.5px;margin:0 0 14px}
+.mem{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--line)}.mem .pa{width:44px;height:44px;font-size:16px;position:relative}
+.mem .t{flex:1;min-width:0}.mem b{display:block}.mem small{color:var(--mute);font-size:13px}.mem .st{font-size:12px;font-weight:600;color:#22c55e}.mem .st.off{color:var(--mute);font-weight:500}
+.pbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;font-weight:700;font-size:15px;flex:1}
+.pbtn.pri{background:var(--grad);color:#fff}.pbtn.sec{background:color-mix(in srgb,var(--a1) 10%,transparent);color:var(--a1)}[data-theme=dark] .pbtn.sec{color:#b9adff}.pbtn svg{width:18px;height:18px}
+.btns{display:flex;gap:10px;margin-top:16px}
+#sticker .pn{border-radius:26px;margin:auto 16px;max-width:400px}#sticker{align-items:center}
+.stk{border-radius:26px;padding:22px 20px 18px;text-align:center;background:#fff;color:#14141f;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#7a5cff,#4f7dff,#22c1ee) border-box;box-shadow:0 10px 30px #6d5dfc33}
+.stk .lg{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#7a5cff,#4f7dff);display:grid;place-items:center;margin:0 auto 10px}.stk .lg svg{stroke:#fff;width:26px;height:26px}
+.stk h2{margin:0;font-size:24px;letter-spacing:-.02em;line-height:1.15}.stk p{margin:6px 0 14px;color:#55576a;font-size:14px}
+.stk .qr{width:220px;height:220px;margin:0 auto;padding:10px;border-radius:18px;background:#fff;border:1px solid #e7e7f0}.stk .qr svg{width:100%;height:100%;display:block}
+.stk .url{margin-top:12px;font:600 13px ui-monospace,Menlo,monospace;color:#6d5dfc;word-break:break-all}
+.stk .langs{margin-top:10px;font-size:12.5px;color:#6d6f82}
+#bigTalk{display:none}.box{min-width:0}.ht b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.simple header .iconbtn{width:36px}
+body.simple{font-size:19px}
+.simple #msgs{gap:6px;padding:18px 14px 10px}.simple .m{font-size:21px;line-height:1.45;padding:14px 18px;border-radius:24px;max-width:88%}
+.simple .m .o{font-size:15px}.simple .who{font-size:15px}.simple .meta{font-size:13px}.simple .sys{font-size:15px}
+.simple .ht b{font-size:19px}.simple .ht small{font-size:14px}.simple #t{font-size:19px}.simple .box{min-height:56px}
+.simple .grp>.pa{width:42px;height:42px;font-size:16px}.simple .grp .sp{width:42px}.simple .m.photo img{max-width:320px}
+.simple #bigTalk{display:flex;width:100%;box-sizing:border-box;margin-top:10px;height:84px;border-radius:24px;background:var(--grad);color:#fff;font-weight:800;font-size:22px;align-items:center;justify-content:center;gap:12px;box-shadow:0 10px 26px var(--glow);touch-action:none;user-select:none;-webkit-user-select:none}
+.simple #bigTalk svg{width:34px;height:34px;stroke:#fff}.simple #bigTalk.rec{background:var(--danger);animation:pulse 1.2s infinite}
+.simple .row:not(.me) .m{cursor:pointer}.spk{display:none}.simple .row:not(.me) .spk{display:inline}
+@media print{body{overflow:visible;background:#fff}body>*:not(#sticker){display:none!important}#sticker{position:static;background:none}#sticker .pn{box-shadow:none;margin:0 auto;padding:0;background:none}#sticker .btns,#sticker h3{display:none!important}.stk{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes fade{from{opacity:0}}@keyframes zoom{from{transform:scale(.9);opacity:0}}
@@ -135,6 +168,11 @@ header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-in
 <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
 <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.8l-10-6.5A1 1 0 0 0 8 5.5z"/></symbol>
 <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/></symbol>
+<symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3M21 14v.01M14 21h3M20 17v4"/></symbol>
+<symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+<symbol id="i-big" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></symbol>
 <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
 </defs></svg>
 
@@ -154,18 +192,22 @@ header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-in
 <div class="langpick"><div class="globe"><svg class="icon"><use href="#i-globe"/></svg></div><div class="t"><small>I speak</small><b id="langName">English</b></div><svg class="icon" style="color:var(--mute)"><use href="#i-down"/></svg><select id="lang" aria-label="Your language"></select></div>
 <p class="hint">Messages from others will be translated into this language.</p></div>
 <div class="field" id="modeBox"><label class="lbl">Room type</label><div class="modes">
+<button class="mode fam" data-m="family"><div class="e">🏡</div><div><b>Family room</b><small>Permanent link + QR sticker for the fridge</small></div><span class="tag">New</span></button>
 <button class="mode on" data-m="saved"><div class="e">💾</div><b>Saved</b><small>History is kept</small></button>
 <button class="mode" data-m="disappearing"><div class="e">⏳</div><b>Disappearing</b><small>Gone after 2 hours</small></button></div></div>
+<div class="field hide" id="famBox"><label class="lbl" for="famName">Family name</label><input id="famName" class="inp" placeholder="e.g. Nguyen Family" maxlength="40"><p class="hint">Your link will look like <b id="famUrl">linkchat…/f/nguyen-family</b> and never expires.</p></div>
+<button class="simpleRow" id="simpleRow" type="button"><span style="font-size:24px">👵</span><div class="t"><b>Simple mode</b><small>Big text, big talk button, reads messages aloud</small></div><span class="sw"></span></button>
 <button id="go" class="cta"><span>Create room</span><svg class="icon"><use href="#i-arrow"/></svg></button>
 </div>
-<div class="feats"><span>🌍 20 languages</span><span>🎙️ Voice notes</span><span>📷 Photos</span><span>🔒 No sign-up</span></div>
+<div class="feats"><span>🌍 20 languages</span><span>🎙️ Voice notes</span><span>📷 Photos</span><span>👨‍👩‍👧 Family groups</span><span>🔒 No sign-up</span></div>
 </div></div>
 
 <div id="chat" class="hide">
 <header><div class="stack" id="stack"><div class="av"><svg class="icon"><use href="#i-chat"/></svg></div></div>
 <div class="ht"><b>LinkChat</b><small><span class="dot" id="dot"></span><span id="badge">Connecting…</span></small></div>
 <label class="lpill" title="Your language"><svg class="icon"><use href="#i-globe"/></svg><span id="lpTxt">EN</span><select id="lang2" aria-label="Your language"></select></label>
-<button class="iconbtn themeBtn" aria-label="Toggle theme"><svg class="icon"><use href="#i-moon"/></svg></button>
+<button class="iconbtn" id="memBtn" aria-label="Members" style="position:relative"><svg class="icon"><use href="#i-users"/></svg><span class="cnt" id="memCnt">1</span></button>
+<button class="iconbtn" id="qrBtn" aria-label="QR sticker"><svg class="icon"><use href="#i-qr"/></svg></button>
 <button class="iconbtn" id="share" aria-label="Share link"><svg class="icon"><use href="#i-share"/></svg></button></header>
 <div id="msgs"><div class="empty" id="empty"><div class="bubble"><svg class="icon" style="width:32px;height:32px"><use href="#i-chat"/></svg></div><b>Your room is ready</b>Send the link to someone. They'll pick their language and you'll each read the chat in your own.<br><button id="share2">Share invite link</button></div></div>
 <div class="composer">
@@ -175,9 +217,18 @@ header{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-in
 <div id="recbar" class="hide"><span class="rd"></span><span id="recT">0:00</span><span class="h" id="recH">Slide ← to cancel</span></div>
 <button class="send" id="sendBtn" aria-label="Send or hold to record"><svg class="icon" id="sendIco"><use href="#i-mic"/></svg></button>
 </div></div>
+<button id="bigTalk" aria-label="Hold to talk"><svg class="icon"><use href="#i-mic"/></svg><span id="bigTalkT">Hold to talk</span></button>
+</div>
 <input type="file" id="file" accept="image/*" class="hide">
 </div>
 
+<div id="memSheet" class="sheet hide"><div class="pn"><h3><span id="memTitle">People in this chat</span><button class="iconbtn" data-close aria-label="Close"><svg class="icon"><use href="#i-x"/></svg></button></h3><p class="sub2">Everyone reads every message in their own language.</p><div id="memList"></div>
+<button class="simpleRow" id="simpleRow2" type="button" style="margin:14px 0 0"><span style="font-size:24px">👵</span><div class="t"><b>Simple mode on this device</b><small>Big text, big talk button, reads messages aloud</small></div><span class="sw"></span></button>
+<div class="btns"><button class="pbtn sec" id="memQr"><svg class="icon"><use href="#i-qr"/></svg>QR sticker</button><button class="pbtn pri" id="memShare"><svg class="icon"><use href="#i-share"/></svg>Invite</button></div></div></div>
+<div id="sticker" class="sheet hide"><div class="pn"><h3><span>Printable sticker</span><button class="iconbtn" data-close aria-label="Close"><svg class="icon"><use href="#i-x"/></svg></button></h3>
+<div class="stk"><div class="lg"><svg class="icon"><use href="#i-chat"/></svg></div><h2 id="stkT">Our family chat</h2><p id="stkS">Scan to chat with us — everyone reads in their own language.</p><div class="qr" id="qr"></div><div class="url" id="stkU"></div><div class="langs">English · Tiếng Việt · Español · 中文 · 한국어 · +15</div></div>
+<div class="btns"><button class="pbtn sec" id="stkCopy"><svg class="icon"><use href="#i-copy"/></svg>Copy link</button><button class="pbtn pri" id="stkPrint"><svg class="icon"><use href="#i-print"/></svg>Print</button></div></div></div>
+<script src="/qrcode.js"></script>
 <script>
 const L={en:'English',es:'Español',fr:'Français',de:'Deutsch',it:'Italiano',pt:'Português',ru:'Русский',zh:'中文',ja:'日本語',ko:'한국어',ar:'العربية',hi:'हिन्दी',tr:'Türkçe',vi:'Tiếng Việt',tl:'Filipino',pl:'Polski',nl:'Nederlands',uk:'Українська',fa:'فارسی',sw:'Kiswahili'};
 const SR={en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',pt:'pt-BR',ru:'ru-RU',zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',ar:'ar-SA',hi:'hi-IN',tr:'tr-TR',vi:'vi-VN',tl:'fil-PH',pl:'pl-PL',nl:'nl-NL',uk:'uk-UA',fa:'fa-IR',sw:'sw-KE'};
@@ -191,19 +242,24 @@ document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=t==='da
 const mq=matchMedia('(prefers-color-scheme: dark)');applyTheme(localStorage.theme||(mq.matches?'dark':'light'));
 mq.onchange=e=>{if(!localStorage.theme)applyTheme(e.matches?'dark':'light')};
 document.querySelectorAll('.themeBtn').forEach(b=>b.onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.theme=t;applyTheme(t)});
-let mode='saved',room=new URLSearchParams(location.search).get('room'),ws,me,myLang,lastSender=null,retry=0;
-document.querySelectorAll('.mode').forEach(d=>d.onclick=()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('on'));d.classList.add('on');mode=d.dataset.m});
+let mode='saved',room=new URLSearchParams(location.search).get('room')||(location.pathname.match(/^\/f\/([\w-]+)/)||[])[1],roomInfo={},members=[],ws,me,myLang,lastSender=null,retry=0;
+document.querySelectorAll('.mode').forEach(d=>d.onclick=()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('on'));d.classList.add('on');mode=d.dataset.m;$('famBox').classList.toggle('hide',mode!=='family');$('go').firstElementChild.textContent=mode==='family'?'Create family room':'Create room';if(mode==='family')$('famName').focus()});
+const slug=t=>t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/gi,'d').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,32);
+$('famName').oninput=()=>{$('famUrl').textContent=location.host+'/f/'+(slug($('famName').value)||'your-family')};$('famName').oninput();
+const link=()=>location.origin+(roomInfo.family?'/f/'+room:'/?room='+room);
+const famTitle=()=>{const t=roomInfo.title||'Family';return /family|gia đình|familia|famille/i.test(t)?t:t+' family'};
+if(room)fetch('/api/rooms/'+room).then(r=>r.ok?r.json():null).then(r=>{if(r&&r.family){roomInfo=r;$('h1').innerHTML='Join the<br><em></em>';$('h1').querySelector('em').textContent=famTitle()+' chat';$('joinInfo').lastElementChild.textContent='This is your family\'s chat room. Pick the language you speak — everyone reads in their own.'}}).catch(()=>{});
 if(room){$('modeBox').classList.add('hide');$('joinInfo').classList.remove('hide');$('go').firstElementChild.textContent='Join chat';$('h1').innerHTML='You\'re invited<br><em>to chat.</em>';$('subt').textContent='Choose your language — you\'ll read everything in it.'}
 $('go').onclick=async()=>{me=$('name').value.trim()||'Guest';localStorage.name=me;myLang=$('lang').value;localStorage.lang=myLang;
-if(!room){try{const r=await(await fetch('/api/rooms',{method:'POST',body:JSON.stringify({mode})})).json();room=r.id;history.replaceState(0,'','?room='+room)}catch{return toast('Could not create room. Check your connection.')}}
+if(!room){try{const r=await(await fetch('/api/rooms',{method:'POST',body:JSON.stringify({mode,title:$('famName').value})})).json();room=r.id;roomInfo=r;history.replaceState(0,'',r.family?'/f/'+room:'?room='+room)}catch{return toast('Could not create room. Check your connection.')}}
 $('setup').classList.add('hide');$('chat').classList.remove('hide');$('lang2').value=myLang;$('lpTxt').textContent=myLang.toUpperCase();connect()};
 function connect(){ws=new WebSocket((location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws?room='+room+'&name='+encodeURIComponent(me)+'&lang='+myLang);
 let first=true;ws.onopen=()=>{retry=0;$('dot').classList.remove('off')};
 ws.onmessage=e=>{const d=JSON.parse(e.data);
-if(d.type==='people'){people=d.people||{};renderPeople()}
-if(d.type==='room'){ws.send(JSON.stringify({type:'profile',avatar:myAvatar}));$('badge').textContent=d.room.mode==='saved'?'Saved chat · online':'Disappearing · until '+new Date(d.room.expires).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});if(first){$('msgs').querySelectorAll('.grp,.row,.sys').forEach(x=>x.remove());lastSender=null;seen.clear();first=false}}
-if(d.type==='error'){toast(d.error);if(/not found/i.test(d.error))dead=true}if(d.type==='sys')sys(d.text);if(d.type==='msg')add(d.msg)};
-ws.onclose=()=>{$('dot').classList.add('off');if(dead){$('badge').textContent='Room not found or expired';return}$('badge').textContent='Reconnecting…';setTimeout(connect,Math.min(8000,800*2**retry++))}}
+if(d.type==='people'){people=d.people||{};renderPeople()}if(d.type==='members'){members=d.members||[];renderPeople()}
+if(d.type==='room'){ws.send(JSON.stringify({type:'profile',avatar:myAvatar}));roomInfo=d.room;$('badge').textContent=d.room.family?'Family room · online':d.room.mode==='saved'?'Saved chat · online':'Disappearing · until '+new Date(d.room.expires).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});if(first){$('msgs').querySelectorAll('.grp,.row,.sys').forEach(x=>x.remove());lastSender=null;seen.clear();first=false}}
+if(d.type==='error'){toast(d.error);if(/not found/i.test(d.error))dead=true}if(d.type==='sys')sys(d.text);if(d.type==='msg'){add(d.msg);if(!d.hist)speakMsg(d.msg)}};
+ws.onclose=()=>{members=[];$('dot').classList.add('off');if(dead){$('badge').textContent='Room not found or expired';return}$('badge').textContent='Reconnecting…';setTimeout(connect,Math.min(8000,800*2**retry++))}}
 let dead=false;const seen=new Set();
 function hideEmpty(){$('empty')?.classList.add('hide')}
 function sys(t){const e=document.createElement('div');e.className='sys';e.textContent=t;$('msgs').append(e);lastSender=null;scroll()}
@@ -212,7 +268,7 @@ const fmt=s=>{s=Math.max(0,Math.round(s||0));return Math.floor(s/60)+':'+String(
 function add(m){if(seen.has(m.id))return;seen.add(m.id);hideEmpty();const mine=m.name===me&&m.lang===myLang||m.name===me;
 const row=document.createElement('div');row.className='row'+(mine?' me':'')+(lastSender!==m.name?' first':'');
 if(lastSender!==m.name&&!mine){const w=document.createElement('div');w.className='who';w.textContent=m.name+' · '+(L[m.lang]||m.lang);row.append(w)}
-lastSender=m.name;const b=document.createElement('div');b.className='m';row.append(b);
+lastSender=m.name;const b=document.createElement('div');b.className='m';b.dataset.id=m.id;byId.set(m.id,m);row.append(b);
 const same=!m.text||m.translated===m.text;
 const textBlock=(label)=>{if(!m.text)return;const x=document.createElement('div');x.className='x';x.textContent=mine?m.text:m.translated;b.append(x);
 if(!same&&!mine){const o=document.createElement('div');o.className='o';o.innerHTML='<i>'+label+'</i>';o.append(document.createTextNode(m.text));b.append(o)}};
@@ -221,7 +277,7 @@ if(m.text){const c=document.createElement('div');c.className='cap';b.append(c);(
 else if(m.kind==='audio'){b.append(voiceEl(m,mine));if(m.text){const wrap=document.createElement('div');wrap.style.marginTop='8px';wrap.style.fontSize='14.5px';const x=document.createElement('div');x.className='x';x.textContent='“'+(mine?m.text:m.translated)+'”';wrap.append(x);
 if(!same&&!mine){const o=document.createElement('div');o.className='o';o.innerHTML='<i>Said</i>';o.append(document.createTextNode(m.text));wrap.append(o)}b.append(wrap)}}
 else textBlock('Original');
-const meta=document.createElement('div');meta.className='meta';meta.textContent=new Date(m.ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+(mine||same?'':' · translated');b.append(meta);
+const meta=document.createElement('div');meta.className='meta';meta.textContent=new Date(m.ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})+(mine||same?'':' · translated');if(!mine&&m.text){const k=document.createElement('span');k.className='spk';k.textContent=' · 🔊 tap to hear';meta.append(k)}b.append(meta);
 if(!mine){const g=document.createElement('div');g.className='grp';g.append(avatarEl(m.name),row);const prev=$('msgs').lastElementChild;
 if(!row.classList.contains('first')&&prev?.classList.contains('grp')){const pa=prev.querySelector(':scope>.pa');if(pa){const sp=document.createElement('div');sp.className='sp';pa.replaceWith(sp)}}$('msgs').append(g)}
 else $('msgs').append(row);scroll()}
@@ -246,7 +302,7 @@ function upd(){ico.setAttribute('href',($('t').value.trim()||photo)?'#i-send':'#
 $('t').oninput=upd;$('t').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();doSend()}};
 function doSend(){const t=$('t').value.trim();if(photo){if(send({kind:'image',data:photo,text:t})){clearPhoto();$('t').value=''}}else if(t&&send({text:t}))$('t').value='';upd()}
 $('lang2').onchange=()=>{myLang=$('lang2').value;localStorage.lang=myLang;$('lpTxt').textContent=myLang.toUpperCase();ws?.readyState===1&&ws.send(JSON.stringify({type:'lang',lang:myLang}));toast('Now translating into '+L[myLang]+' (new messages)')};
-async function share(){const u=location.origin+'/?room='+room;if(navigator.share)try{await navigator.share({title:'Join my LinkChat',text:'Chat with me — it translates live!',url:u});return}catch(e){if(e.name==='AbortError')return}
+async function share(){const u=link();if(navigator.share)try{await navigator.share({title:'Join my LinkChat',text:'Chat with me — it translates live!',url:u});return}catch(e){if(e.name==='AbortError')return}
 try{await navigator.clipboard.writeText(u);toast('Invite link copied')}catch{prompt('Copy this link',u)}}
 $('share').onclick=share;$('share2').onclick=share;
 // photos
@@ -266,17 +322,20 @@ sb.onpointermove=e=>{if(!rec)return;const c=cancelX-e.clientX>80;if(c!==canceled
 sb.onpointerup=e=>{if(rec)stopRec(!canceled);else if(pending){pending=false;stopAfterStart=true}};
 sb.onpointercancel=()=>{if(rec)stopRec(false)};
 sb.onclick=()=>{if($('t').value.trim()||photo)doSend()};
+const bt=$('bigTalk');bt.addEventListener('contextmenu',e=>e.preventDefault());
+bt.onpointerdown=e=>{e.preventDefault();bt.setPointerCapture?.(e.pointerId);cancelX=e.clientX;canceled=false;speechSynthesis?.cancel?.();startRec()};
+bt.onpointerup=sb.onpointerup;bt.onpointercancel=sb.onpointercancel;bt.onpointermove=sb.onpointermove;
 let pending=false,stopAfterStart=false;
 async function startRec(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)return toast('Voice messages aren\'t supported in this browser');
 pending=true;stopAfterStart=false;let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch{pending=false;return toast('Allow microphone access to send voice messages')}
 if(stopAfterStart){stream.getTracks().forEach(t=>t.stop());pending=false;return toast('Hold the mic button to record')}pending=false;
 const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported?.(t))||'';
 rec=new MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:32000}:{audioBitsPerSecond:32000});chunks=[];rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);rec.start(250);recStart=Date.now();
-navigator.vibrate?.(15);sb.classList.add('rec');$('box').classList.add('hide');$('recbar').classList.remove('hide');$('recbar').classList.remove('cancel');$('recT').textContent='0:00';
+navigator.vibrate?.(15);sb.classList.add('rec');bt.classList.add('rec');$('bigTalkT').textContent='Recording… let go to send';$('box').classList.add('hide');$('recbar').classList.remove('hide');$('recbar').classList.remove('cancel');$('recT').textContent='0:00';
 recTimer=setInterval(()=>{const s=(Date.now()-recStart)/1000;$('recT').textContent=fmt(s);if(s>=120)stopRec(true)},250);
 transcript='';const S=window.SpeechRecognition||window.webkitSpeechRecognition;if(S){try{speech=new S();speech.lang=SR[myLang]||myLang;speech.continuous=true;speech.interimResults=true;
 speech.onresult=ev=>{let t='';for(const r of ev.results)t+=r[0].transcript;transcript=t};speech.onerror=()=>{};speech.start()}catch{speech=null}}}
-function stopRec(ok){const r=rec;rec=null;clearInterval(recTimer);sb.classList.remove('rec');$('box').classList.remove('hide');$('recbar').classList.add('hide');
+function stopRec(ok){const r=rec;rec=null;clearInterval(recTimer);sb.classList.remove('rec');bt.classList.remove('rec');$('bigTalkT').textContent='Hold to talk';$('box').classList.remove('hide');$('recbar').classList.add('hide');
 const dur=(Date.now()-recStart)/1000;const sp=speech;speech=null;
 r.onstop=async()=>{r.stream.getTracks().forEach(t=>t.stop());if(!ok)return toast('Voice message canceled');if(dur<0.6)return toast('Hold to record a voice message');
 await new Promise(res=>{if(!sp)return res();sp.onend=res;try{sp.stop()}catch{res()}setTimeout(res,1200)});
@@ -297,8 +356,31 @@ $('avFile').onchange=async()=>{const f=$('avFile').files[0];$('avFile').value=''
 async function squareAvatar(f){const url=URL.createObjectURL(f);const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});
 const S=256,c=document.createElement('canvas');c.width=c.height=S;const g=c.getContext('2d');const m=Math.min(img.naturalWidth,img.naturalHeight);
 g.drawImage(img,(img.naturalWidth-m)/2,(img.naturalHeight-m)/2,m,m,0,0,S,S);URL.revokeObjectURL(url);let q=.85,out;do{out=c.toDataURL('image/jpeg',q);q-=.1}while(out.length*.75>150*1024&&q>.3);if(out.length*.75>150*1024)throw 0;return out}
-function renderPeople(){document.querySelectorAll('.pa[data-name]').forEach(e=>paint(e,e.dataset.name));const st=$('stack');const others=Object.keys(people).filter(n=>n!==me).slice(-3);
-st.innerHTML='';if(!others.length){st.innerHTML='<div class="av"><svg class="icon"><use href="#i-chat"/></svg></div>';return}for(const n of others)st.append(avatarEl(n));
-const names=others.join(', ');document.querySelector('.ht b').textContent=names.length>22?others.length+' people':names}
+function renderPeople(){document.querySelectorAll('.pa[data-name]').forEach(e=>paint(e,e.dataset.name));const st=$('stack');const on=[...new Set(members.map(x=>x.name))];
+const all=[...new Set([...on,...Object.keys(people)])];const others=all.filter(n=>n!==me);$('memCnt').textContent=Math.max(1,on.length);
+const hb=document.querySelector('.ht b');st.innerHTML='';if(!others.length){st.innerHTML='<div class="av"><svg class="icon"><use href="#i-chat"/></svg></div>';hb.textContent=roomInfo.family?famTitle():'LinkChat'}
+else{for(const n of others.slice(-3))st.append(avatarEl(n));const names=others.join(', ');hb.textContent=roomInfo.family?famTitle():names.length>22?others.length+' people':names}
+if(ws?.readyState===1&&!/Reconnect|Connect/.test($('badge').textContent)&&on.length>2)$('badge').textContent=(roomInfo.family?'Family room':'Group')+' · '+on.length+' online';
+if(!$('memSheet').classList.contains('hide'))renderMembers()}
+function renderMembers(){const on=new Map(members.map(x=>[x.name,x.lang]));const all=[...new Set([me,...on.keys(),...Object.keys(people)])];const l=$('memList');l.innerHTML='';
+$('memTitle').textContent=roomInfo.family?famTitle():'People in this chat';
+for(const n of all){const lang=n===me?myLang:on.get(n)||people[n]?.lang;const r=document.createElement('div');r.className='mem';const a=avatarEl(n);if(n===me)paint(a,n,myAvatar);
+const t=document.createElement('div');t.className='t';const b=document.createElement('b');b.textContent=n+(n===me?' (you)':'');const sm=document.createElement('small');sm.textContent='Reads in '+(L[lang]||lang||'—');t.append(b,sm);
+const st=document.createElement('span');const isOn=n===me||on.has(n);st.className='st'+(isOn?'':' off');st.textContent=isOn?'● Online':'Away';r.append(a,t,st);l.append(r)}}
+// sheets
+document.querySelectorAll('.sheet').forEach(s=>s.onclick=e=>{if(e.target===s||e.target.closest('[data-close]'))s.classList.add('hide')});
+$('memBtn').onclick=()=>{renderMembers();$('memSheet').classList.remove('hide')};$('memShare').onclick=share;
+function showSticker(){$('memSheet').classList.add('hide');const u=link();$('stkU').textContent=u.replace(/^https?:\/\//,'');
+$('stkT').textContent=roomInfo.family?famTitle():'Chat with me';$('stkS').textContent=roomInfo.family?'Scan to join our family chat — everyone reads in their own language.':'Scan to chat — every message is translated live.';
+try{const q=qrcode(0,'M');q.addData(u);q.make();$('qr').innerHTML=q.createSvgTag({cellSize:6,margin:0,scalable:true})}catch{$('qr').textContent='QR unavailable'}$('sticker').classList.remove('hide')}
+$('qrBtn').onclick=showSticker;$('memQr').onclick=showSticker;$('stkPrint').onclick=()=>print();
+$('stkCopy').onclick=async()=>{try{await navigator.clipboard.writeText(link());toast('Link copied')}catch{prompt('Copy this link',link())}};
+// simple mode
+function setSimple(v){document.body.classList.toggle('simple',v);localStorage.simple=v?'1':'';for(const b of[$('simpleRow'),$('simpleRow2')])b.classList.toggle('on',v);if(!v)speechSynthesis?.cancel?.()}
+setSimple(localStorage.simple==='1');for(const b of[$('simpleRow'),$('simpleRow2')])b.onclick=()=>{const v=!document.body.classList.contains('simple');setSimple(v);if(v){speakText('',myLang||$('lang').value);toast('Simple mode on — messages will be read aloud')}};
+function speakText(t,lang){if(!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t);const tag=SR[lang]||lang;u.lang=tag;const v=speechSynthesis.getVoices().find(v=>v.lang===tag)||speechSynthesis.getVoices().find(v=>v.lang.slice(0,2)===lang);if(v)u.voice=v;u.rate=.92;speechSynthesis.speak(u)}
+function speakMsg(m,force){if(!force&&(!document.body.classList.contains('simple')||m.name===me))return;const t=m.text?(m.translated||m.text):'';if(!t)return;speakText(m.name+'. '+t,myLang)}
+$('msgs').addEventListener('click',e=>{if(!document.body.classList.contains('simple'))return;const b=e.target.closest('.row:not(.me) .m');if(!b||e.target.closest('button,img,.wave'))return;const m=byId.get(b.dataset.id);if(m){speechSynthesis?.cancel();speakMsg(m,true)}});
+const byId=new Map();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script></body></html>
